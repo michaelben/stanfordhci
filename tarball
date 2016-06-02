@@ -1,0 +1,15 @@
+#!/usr/bin/env /bin/bash
+# tarball <date>
+
+. ~/.bash_env
+
+project=~/python/stanford_hci
+dest=/d_drive/bq/python/stanford_hci
+
+cd $project
+
+snippets=$(cd1 $1 a)
+snippets=$(basename $snippets)
+echo $snippets
+tar cvfz $snippets.tar.gz $snippets --exclude='*.1' --exclude='daily_report.json'
+cp $snippets.tar.gz $dest

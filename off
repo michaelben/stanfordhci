@@ -1,0 +1,27 @@
+#!/usr/bin/env /bin/bash
+# off <date> <start1> <start2>
+
+project=~/python/stanford_hci
+dest=/d_drive/bq/python/stanford_hci
+
+if [[ ! -e $dest ]]; then
+  shared_folder
+fi
+
+cd $project
+killall -SIGTERM -g python
+
+. ~/.bash_env
+getdate $1
+curdate=$gtdate
+$project/folder_join.sh $curdate $2 $3
+
+posts_file=nex1000-michael
+snippets=snippets-$posts_file-$curdate
+if [[ -z $2 ]]; then
+  tar cvfz $snippets.tar.gz $snippets --exclude='*.1'
+else
+  tar cvfz $snippets.tar.gz $snippets --exclude='*.1' --exclude='daily_report.json'
+fi
+cp $snippets.tar.gz $dest
+cat $snippets/daily_report.txt

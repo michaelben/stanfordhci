@@ -1,0 +1,2 @@
+# pgrep python
+killall -SIGTERM -g python

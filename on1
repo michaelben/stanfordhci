@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# on1 <date> <engine> <posts_file>
+
+. ~/.bash_env
+getdate $1
+engine=${2:-sogou}
+posts_file=${3:-nex1000-michael.txt}
+p ~/python/stanford_hci/run.py -d $gtdate -s $engine $posts_file

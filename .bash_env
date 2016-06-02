@@ -1,0 +1,63 @@
+# getdate(date)
+getdate() {
+  local curdate=`date --iso-8601`
+  local curyear=${curdate%%-*-*}
+  local curmonthday=${curdate#*-}
+  local curmonth=${curmonthday%-*}
+  local curday=${curmonthday#*-}
+
+  if [[ -z $1 ]]; then
+    local gotodate=`date --iso-8601`
+  elif [[ $1 =~ [0-9]{2,4}-[0-9]{1,2}-[0-9]{1,2} && $1 = $BASH_REMATCH ]]; then
+    local gotodate=$1
+  elif [[ $1 =~ [0-9]{1,2}-[0-9]{1,2} && $1 = $BASH_REMATCH ]]; then
+    local gotodate=$curyear-$1
+  elif [[ $1 =~ [0-9]{1,2} && $1 = $BASH_REMATCH ]]; then
+    local gotodate=$curyear-$curmonth-$1
+  else
+    echo date should be 2016-03-20 or 03-20 or 20
+    # exit -1
+  fi
+  local gotoyear=${gotodate%%-*-*}
+  local gotomonthday=${gotodate#*-}
+  local gotomonth=${gotomonthday%-*}
+  local gotoday=${gotomonthday#*-}
+  if (( 10#$gotomonth < 10#1 || 10#$gotomonth > 10#12 || 10#$gotoday < 10#1 || 10#$gotoday > 10#31 )); then
+    echo $gotodate invalid date
+    # exit -1
+  fi
+  if [[ $gotoyear =~ [0-9]{2} && $gotoyear = $BASH_REMATCH ]]; then
+    local gotoyear=20$gotoyear
+  fi
+  if [[ $gotomonth =~ [1-9] && $gotomonth = $BASH_REMATCH ]]; then
+    local gotomonth=0$gotomonth
+  fi
+  if [[ $gotoday =~ [1-9] && $gotoday = $BASH_REMATCH ]]; then
+    local gotoday=0$gotoday
+  fi
+  local gotodate=$gotoyear-$gotomonth-$gotoday
+  gtdate=$gotodate
+}
+
+# cdir(post_file, date)
+cdir() {
+  getdate $2
+  local gotodate=$gtdate
+  local posts_file=$1
+  local snippets=$project/snippets-$posts_file-$gotodate
+  if [[ -e $snippets ]]; then
+    if [[ -z $3 ]]; then
+      cd $snippets
+    else
+      echo $snippets
+    fi
+  else
+    echo $snippets does not exit
+  fi
+}
+cd1() {
+  cdir nex1000-michael $1 $2
+}
+cd2() {
+  cdir nex1000-michael_500 $1 $2
+}
